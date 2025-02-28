@@ -8,7 +8,7 @@ export default function Home() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<string[]>([]);
   const [showForm, setShowForm] = useState(true);
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
 
@@ -24,7 +24,7 @@ export default function Home() {
     }
   }, [messages]);
   
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setMessages(["Iniciando processo..."]);
