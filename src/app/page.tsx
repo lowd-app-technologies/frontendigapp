@@ -31,7 +31,7 @@ export default function Home() {
     setShowForm(false);
     setCurrentMessageIndex(0);
 
-    const ws = new WebSocket("ws://pythonfastapi-production-437e.up.railway.app/ws");
+    const ws = new WebSocket("wss://pythonfastapi-production-437e.up.railway.app/ws");
     
     ws.onopen = () => {
       ws.send(JSON.stringify({ username, password }));
