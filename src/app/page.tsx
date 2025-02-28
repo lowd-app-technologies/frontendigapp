@@ -18,7 +18,7 @@ export default function Home() {
         setCurrentMessageIndex((prevIndex) => 
           prevIndex < messages.length - 1 ? prevIndex + 1 : prevIndex
         );
-      }, 2000); // Tempo de exibição de cada mensagem
+      }, 2000);
       
       return () => clearInterval(interval);
     }
