@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Progress } from "@/components/ui/progress";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -11,19 +11,20 @@ export default function Home() {
   const [messages, setMessages] = useState<string[]>([]);
   const [showForm, setShowForm] = useState(true);
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
+  const wsRef = useRef<WebSocket | null>(null); // Guardar o WebSocket
 
   useEffect(() => {
     if (messages.length > 0) {
       const interval = setInterval(() => {
-        setCurrentMessageIndex((prevIndex) => 
+        setCurrentMessageIndex((prevIndex) =>
           prevIndex < messages.length - 1 ? prevIndex + 1 : prevIndex
         );
       }, 2000);
-      
+
       return () => clearInterval(interval);
     }
   }, [messages]);
-  
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
@@ -32,23 +33,56 @@ export default function Home() {
     setCurrentMessageIndex(0);
 
     const ws = new WebSocket("wss://pythonfastapi-production-437e.up.railway.app/ws");
-    
+       
+    wsRef.current = ws; // Armazena a referência do WebSocket
+
     ws.onopen = () => {
       ws.send(JSON.stringify({ username, password }));
     };
 
     ws.onmessage = (event) => {
       setMessages((prev) => [...prev, event.data]);
-    };
 
-    ws.onclose = () => {
-      setLoading(false);
+      if (event.data.includes("Autenticação bem-sucedida! Adicionando usuários ao Close Friends...")) {
+        setLoading(false);
+      }
     };
+  };
+
+  const handleStopService = async () => {
+    try {
+      // Envia a requisição de parada ao servidor
+      const response = await fetch("https://pythonfastapi-production-437e.up.railway.app/stop", { method: "POST" });
+  
+      if (response.ok) {
+        // Agora, o WebSocket é fechado somente após a requisição ser bem-sucedida
+        if (wsRef.current) {
+          // Opcionalmente, espere uma mensagem do servidor confirmando a parada do processo
+          wsRef.current.onmessage = (event) => {
+            if (event.data.includes("Processo interrompido!")) {
+              wsRef.current?.close();
+              wsRef.current = null;
+            }
+          };
+        }
+  
+        setMessages((prev) => [...prev, "Processo interrompido!"]);
+        setLoading(false);
+        setShowForm(true);
+      } else {
+        setMessages((prev) => [...prev, "Erro ao interromper o processo!"]);
+      }
+    } catch (error) {
+      console.error("Erro ao interromper o processo:", error);
+      setMessages((prev) => [...prev, "Erro ao interromper o processo!"]);
+    }
   };
   
   return (
     <div className="flex flex-col items-center p-6 bg-gray-50 min-h-screen justify-center">
-      <h1 className="text-3xl font-bold text-center mb-6">Adicionar Close Friends</h1>
+      <h1 className="text-3xl font-bold text-center mb-6">
+        Adicionar Close Friends
+      </h1>
       {showForm ? (
         <form onSubmit={handleSubmit} className="space-y-6 w-full max-w-md">
           <input
@@ -91,7 +125,17 @@ export default function Home() {
               </motion.p>
             )}
           </AnimatePresence>
-          {loading && <Progress value={100} className="w-full mt-4" />}  
+          {loading && <Progress value={100} className="w-full mt-4" />}
+          {loading === false && (
+            <button
+            type="button"
+            onClick={handleStopService}
+            className="bg-red-600 text-white px-6 py-3 rounded-lg w-full mt-4 hover:bg-red-700 transition duration-200"
+            disabled={loading}
+          >
+            Encerrar
+          </button>
+          )}
         </div>
       )}
     </div>
