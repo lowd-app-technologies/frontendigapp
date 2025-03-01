@@ -11,7 +11,7 @@ export default function Home() {
   const [messages, setMessages] = useState<string[]>([]);
   const [showForm, setShowForm] = useState(true);
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
-  const wsRef = useRef<WebSocket | null>(null); // Guardar o WebSocket
+  const wsRef = useRef<WebSocket | null>(null); 
 
   useEffect(() => {
     if (messages.length > 0) {
@@ -34,7 +34,7 @@ export default function Home() {
 
     const ws = new WebSocket("wss://pythonfastapi-production-437e.up.railway.app/ws");
        
-    wsRef.current = ws; // Armazena a referência do WebSocket
+    wsRef.current = ws; 
 
     ws.onopen = () => {
       ws.send(JSON.stringify({ username, password }));
@@ -51,13 +51,13 @@ export default function Home() {
 
   const handleStopService = async () => {
     try {
-      // Envia a requisição de parada ao servidor
+      
       const response = await fetch("https://pythonfastapi-production-437e.up.railway.app/stop", { method: "POST" });
   
       if (response.ok) {
-        // Agora, o WebSocket é fechado somente após a requisição ser bem-sucedida
+        
         if (wsRef.current) {
-          // Opcionalmente, espere uma mensagem do servidor confirmando a parada do processo
+
           wsRef.current.onmessage = (event) => {
             if (event.data.includes("Processo interrompido!")) {
               wsRef.current?.close();
@@ -68,7 +68,12 @@ export default function Home() {
   
         setMessages((prev) => [...prev, "Processo interrompido!"]);
         setLoading(false);
-        setShowForm(true);
+        
+        const interaval = setInterval(() => {
+          setShowForm(true);
+          clearInterval(interaval);
+        }, 5000);
+
       } else {
         setMessages((prev) => [...prev, "Erro ao interromper o processo!"]);
       }
