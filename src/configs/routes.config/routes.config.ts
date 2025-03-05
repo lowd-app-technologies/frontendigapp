@@ -12,6 +12,12 @@ export const protectedRoutes: Routes = [
         component: lazy(() => import('@/views/instagram/CloseFriends')),
         authority: [],
     },
+    {
+        key: 'admin.authorizedEmails',
+        path: '/admin/authorized-emails',
+        component: lazy(() => import('@/views/admin/AuthorizedEmails')),
+        authority: ['admin'],
+    },
     /** Example purpose only, please remove */
     {
         key: 'singleMenuItem',

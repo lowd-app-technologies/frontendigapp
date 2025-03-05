@@ -1,6 +1,8 @@
 import { User as FirebaseUser } from 'firebase/auth'
 import { signInWithFirebaseGoogle } from './firebase/FirebaseGoogleAuth'
 import type { SignInResponse } from '../@types/auth'
+import { isEmailAuthorized } from '@/services/AuthorizationService'
+import { AUTH_ERROR_MESSAGES } from '@/constants/auth.constant'
 
 type FirebaseOAuthResponse = {
     token: string
@@ -28,6 +30,14 @@ async function placeholderFunction(): Promise<SignInResponse> {
 export async function apiGoogleOauthSignIn(): Promise<SignInResponse> {
     try {
         const response = await signInWithFirebaseGoogle()
+        
+        // Verificar se o email está autorizado
+        if (response.user.email) {
+            const isAuthorized = await isEmailAuthorized(response.user.email);
+            if (!isAuthorized) {
+                throw new Error(AUTH_ERROR_MESSAGES.EMAIL_NOT_AUTHORIZED);
+            }
+        }
         
         // Converter o usuário do Firebase para o formato esperado pela aplicação
         return {

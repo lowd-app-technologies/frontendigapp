@@ -7,6 +7,9 @@ import type {
     SignUpResponse,
 } from '../@types/auth'
 
+import { isEmailAuthorized } from '@/services/AuthorizationService'
+import { AUTH_ERROR_MESSAGES } from '@/constants/auth.constant'
+
 import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
@@ -17,6 +20,12 @@ import FirebaseAuth from './firebase/FirebaseAuth'
 
 export async function apiSignIn(data: SignInCredential): Promise<SignInResponse> {
     try {
+        // Verificar se o email está autorizado
+        const isAuthorized = await isEmailAuthorized(data.email);
+        if (!isAuthorized) {
+            throw new Error(AUTH_ERROR_MESSAGES.EMAIL_NOT_AUTHORIZED);
+        }
+        
         const resp = await signInWithEmailAndPassword(FirebaseAuth, data.email, data.password);
         const token = await resp.user.getIdToken();
         
@@ -39,6 +48,12 @@ export async function apiSignIn(data: SignInCredential): Promise<SignInResponse>
 
 export async function apiSignUp(data: SignUpCredential): Promise<SignUpResponse> {
     try {
+        // Verificar se o email está autorizado
+        const isAuthorized = await isEmailAuthorized(data.email);
+        if (!isAuthorized) {
+            throw new Error(AUTH_ERROR_MESSAGES.EMAIL_NOT_AUTHORIZED);
+        }
+        
         const resp = await createUserWithEmailAndPassword(FirebaseAuth, data.email, data.password);
         const token = await resp.user.getIdToken();
         
