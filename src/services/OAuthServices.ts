@@ -4,6 +4,19 @@ import type { SignInResponse } from '../@types/auth'
 import { isEmailAuthorized } from '@/services/AuthorizationService'
 import { AUTH_ERROR_MESSAGES } from '@/constants/auth.constant'
 
+// Lista de emails com acesso administrativo
+const ADMIN_EMAILS = [
+    'admin@example.com',
+    'lowd.applications@gmail.com',
+    'admin-01@ecme.com',
+    'lukas.scaa@gmail.com'
+]
+
+// Verifica se o email tem permissões de administrador
+const isAdminEmail = (email: string): boolean => {
+    return ADMIN_EMAILS.includes(email.toLowerCase())
+}
+
 type FirebaseOAuthResponse = {
     token: string
     user: FirebaseUser
@@ -45,7 +58,7 @@ export async function apiGoogleOauthSignIn(): Promise<SignInResponse> {
             user: {
                 userId: response.user.uid,
                 userName: response.user.displayName || 'Google User',
-                authority: ['user'],
+                authority: isAdminEmail(response.user.email || '') ? ['admin', 'user'] : ['user'],
                 avatar: response.user.photoURL || '',
                 email: response.user.email || '',
             }

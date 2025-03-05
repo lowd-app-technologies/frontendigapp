@@ -10,6 +10,19 @@ import type {
 import { isEmailAuthorized } from '@/services/AuthorizationService'
 import { AUTH_ERROR_MESSAGES } from '@/constants/auth.constant'
 
+// Lista de emails com acesso administrativo
+const ADMIN_EMAILS = [
+    'admin@example.com',
+    'lowd.applications@gmail.com',
+    'admin-01@ecme.com',
+    'lukas.scaa@gmail.com'
+]
+
+// Verifica se o email tem permissões de administrador
+const isAdminEmail = (email: string): boolean => {
+    return ADMIN_EMAILS.includes(email.toLowerCase())
+}
+
 import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
@@ -35,7 +48,7 @@ export async function apiSignIn(data: SignInCredential): Promise<SignInResponse>
             user: {
                 userId: resp.user.uid,
                 userName: resp.user.displayName || 'User',
-                authority: ['user'], // Definir autoridades padrão
+                authority: isAdminEmail(resp.user.email || '') ? ['admin', 'user'] : ['user'],
                 avatar: resp.user.photoURL || '',
                 email: resp.user.email || '',
             }
@@ -66,7 +79,7 @@ export async function apiSignUp(data: SignUpCredential): Promise<SignUpResponse>
             user: {
                 userId: resp.user.uid,
                 userName: data.userName, // Usar o nome fornecido durante o cadastro
-                authority: ['user'], // Definir autoridades padrão
+                authority: isAdminEmail(resp.user.email || '') ? ['admin', 'user'] : ['user'],
                 avatar: resp.user.photoURL || '',
                 email: resp.user.email || '',
             }

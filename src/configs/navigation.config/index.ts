@@ -1,5 +1,6 @@
 import {
     NAV_ITEM_TYPE_ITEM,
+    NAV_ITEM_TYPE_COLLAPSE,
 } from '@/constants/navigation.constant'
 
 import type { NavigationTree } from '@/@types/navigation'

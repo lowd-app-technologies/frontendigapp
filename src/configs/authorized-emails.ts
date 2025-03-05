@@ -13,6 +13,7 @@ export const AUTHORIZED_EMAILS: string[] = [
     'admin@example.com',
     'lowd.applications@gmail.com',
     'admin-01@ecme.com',
+    'lukas.scaa@gmail.com',
     
     // Adicione seus emails autorizados abaixo:
     // 'email1@dominio.com',
