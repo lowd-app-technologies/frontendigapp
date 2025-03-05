@@ -8,20 +8,8 @@ import type {
 } from '../@types/auth'
 
 import { isEmailAuthorized } from '@/services/AuthorizationService'
+import { isAdminEmail } from '@/configs/authorized-emails'
 import { AUTH_ERROR_MESSAGES } from '@/constants/auth.constant'
-
-// Lista de emails com acesso administrativo
-const ADMIN_EMAILS = [
-    'admin@example.com',
-    'lowd.applications@gmail.com',
-    'admin-01@ecme.com',
-    'lukas.scaa@gmail.com'
-]
-
-// Verifica se o email tem permissões de administrador
-const isAdminEmail = (email: string): boolean => {
-    return ADMIN_EMAILS.includes(email.toLowerCase())
-}
 
 import {
     createUserWithEmailAndPassword,
