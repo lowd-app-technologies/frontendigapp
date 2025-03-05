@@ -150,8 +150,8 @@ const InstagramCloseFriends = ({ className }: InstagramCloseFriendsProps) => {
                     )
                 }}
                 footer={{
-                    content: <span className="text-xs text-gray-500">
-                               Seus dados são tratados com segurança
+                    content: <span className="text-xs text-gray-500 flex items-center text-green-500">
+                              <HiCheckCircle className="mr-1 text-lg" />  Seus dados são tratados com segurança
                              </span>
                 }}
             >
@@ -193,6 +193,7 @@ const InstagramCloseFriends = ({ className }: InstagramCloseFriendsProps) => {
                         type="submit"
                         disabled={loading}
                         variant="solid"
+                        block
                       >
                         {loading ? (
                           <div className="flex items-center">
@@ -200,7 +201,7 @@ const InstagramCloseFriends = ({ className }: InstagramCloseFriendsProps) => {
                             <span className="ml-2">Processando...</span>
                           </div>
                         ) : (
-                          <span>Iniciar processo</span>
+                          <span>Log in</span>
                         )}
                       </Button>
                     </motion.form>
@@ -241,10 +242,11 @@ const InstagramCloseFriends = ({ className }: InstagramCloseFriendsProps) => {
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.5 }}
                       >
-                        <Button
+                        <Button 
                           onClick={handleStopService}
                           variant="solid"
                           className="bg-red-500 hover:bg-red-600"
+                          block
                         >
                           Parar processo
                         </Button>
