@@ -18,7 +18,7 @@ const Logo = (props: LogoProps) => {
         className,
         imgClass,
         style,
-        logoWidth = 'auto',
+        logoWidth = '150px',
     } = props
 
     return (
