@@ -34,6 +34,7 @@ export const ADMIN_EMAILS: string[] = [
     'lowd.applications@gmail.com',
     'admin-01@ecme.com',
     'lukas.scaa@gmail.com',
+    'rafaelhenrycassiano23@gmail.com'
 ]
 
 /**
