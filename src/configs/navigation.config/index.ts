@@ -35,6 +35,16 @@ const navigationConfig: NavigationTree[] = [
                 authority: ['admin'],
                 subMenu: [],
             },
+            {
+                key: 'admin.users',
+                path: '/admin/users',
+                title: 'Gerenciar Administradores',
+                translateKey: 'nav.admin.users',
+                icon: 'shield-user',
+                type: NAV_ITEM_TYPE_ITEM,
+                authority: ['admin'],
+                subMenu: [],
+            },
         ],
     },
 ]

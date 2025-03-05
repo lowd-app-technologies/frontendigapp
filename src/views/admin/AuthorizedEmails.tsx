@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Input, Card, Alert } from '@/components/ui'
-import { Tag } from '@/components/ui'
+import { Button, Input, Card, Alert, Tag } from '@/components/ui'
 import { 
     getAllAuthorizedEmails, 
     addAuthorizedEmail, 
     removeAuthorizedEmail 
 } from '@/services/AuthorizationService'
+import type { Meta } from '@/@types/routes'
 
-const AuthorizedEmails = () => {
+const AuthorizedEmails = <T extends Meta>(_props: T) => {
     const [emails, setEmails] = useState<string[]>([])
     const [newEmail, setNewEmail] = useState('')
     const [loading, setLoading] = useState(false)
@@ -153,7 +153,7 @@ const AuthorizedEmails = () => {
                                     key={email}
                                     className="mb-2"
                                     prefix={
-                                        <span className="cursor-pointer" onClick={() => handleRemoveEmail(email)}>
+                                        <span className="cursor-pointer mr-2" onClick={() => handleRemoveEmail(email)}>
                                             ✕
                                         </span>
                                     }
