@@ -84,10 +84,17 @@ const InstagramCloseFriends = ({ className }: InstagramCloseFriendsProps) => {
     }
 
     return (
-        <div className={`flex flex-col items-center p-6 bg-gray-50 min-h-screen justify-center ${className || ''}`}>
+        <div className={`flex flex-col items-center p-6 bg-neutral justify-center ${className || ''}`} style={{ padding: '40px', borderRadius: '12px' }}>
             <h1 className="text-3xl font-bold text-center mb-6">
-                Adicionar Close Friends
+               Login Insgragram
             </h1>
+            <p className="text-sm font-bold text-center mb-6">
+               O login do instagram será usado para adicionar usuários ao Close Friends.
+               <br />
+               <span className="text-xs italic">
+                nota: o login será usado para todos os processos, portanto, sua senha não será partilhada.
+               </span>
+            </p>
             {showForm ? (
                 <form onSubmit={handleSubmit} className="space-y-6 w-full max-w-md">
                     <Input
