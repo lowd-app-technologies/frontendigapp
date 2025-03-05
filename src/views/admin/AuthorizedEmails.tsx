@@ -32,6 +32,7 @@ const AuthorizedEmails = () => {
     // Carrega a lista de emails ao montar o componente
     useEffect(() => {
         loadEmails()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     // Adiciona um novo email autorizado
@@ -46,13 +47,21 @@ const AuthorizedEmails = () => {
             return
         }
 
+        // Prevenir duplicatas
+        if (emails.includes(newEmail.toLowerCase())) {
+            setError(`O email ${newEmail} já está na lista`)
+            return
+        }
+
         setLoading(true)
         try {
             const success = await addAuthorizedEmail(newEmail)
             if (success) {
                 setSuccess(`Email ${newEmail} adicionado com sucesso`)
                 setNewEmail('')
-                await loadEmails()
+                
+                // Atualizar a lista local sem fazer nova consulta
+                setEmails(prev => [...prev, newEmail.toLowerCase()])
             } else {
                 setError('Erro ao adicionar email')
             }
@@ -71,7 +80,9 @@ const AuthorizedEmails = () => {
             const success = await removeAuthorizedEmail(email)
             if (success) {
                 setSuccess(`Email ${email} removido com sucesso`)
-                await loadEmails()
+                
+                // Atualizar a lista local sem fazer nova consulta
+                setEmails(prev => prev.filter(e => e !== email.toLowerCase()))
             } else {
                 setError('Erro ao remover email')
             }

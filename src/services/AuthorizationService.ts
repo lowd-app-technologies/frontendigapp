@@ -97,10 +97,29 @@ export const removeAuthorizedEmail = async (email: string): Promise<boolean> => 
  */
 export const getAllAuthorizedEmails = async (): Promise<string[]> => {
     try {
-        const q = collection(FirebaseFirestore, COLLECTION_NAME);
-        const querySnapshot = await getDocs(q);
+        // Primeiro, incluir emails da lista local estática
+        const localEmails = [...AUTHORIZED_EMAILS];
         
-        return querySnapshot.docs.map((doc) => doc.data().email);
+        try {
+            // Depois, buscar emails do Firestore
+            const q = collection(FirebaseFirestore, COLLECTION_NAME);
+            const querySnapshot = await getDocs(q);
+            
+            // Combinar os dois conjuntos de emails e remover duplicatas
+            const firestoreEmails = querySnapshot.docs.map((doc) => doc.data().email);
+            const allEmails = [...new Set([...localEmails, ...firestoreEmails])];
+            
+            // Atualizar o cache com todos os emails
+            allEmails.forEach(email => {
+                emailAuthorizationCache[email.toLowerCase()] = true;
+            });
+            
+            return allEmails;
+        } catch (firestoreError) {
+            console.error('Erro ao buscar emails no Firestore:', firestoreError);
+            // Se falhar ao buscar do Firestore, retornar apenas os emails locais
+            return localEmails;
+        }
     } catch (error) {
         console.error('Erro ao buscar emails autorizados:', error);
         return [];
