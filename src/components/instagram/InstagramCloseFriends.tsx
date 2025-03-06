@@ -221,7 +221,7 @@ const InstagramCloseFriends = ({ className }: InstagramCloseFriendsProps) => {
                       >
                         Processo em andamento...
                       </motion.p>
-                      <ul className="space-y-2">
+                      <ul className="space-y-2 max-h-[350px] overflow-auto">
                         <AnimatePresence>
                           {messages.map((message, index) => (
                             <motion.li 
