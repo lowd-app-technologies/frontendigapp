@@ -53,7 +53,7 @@ export default function Home() {
         setLoading(false);
       }
 
-      if (event.data.includes("Digite o código de dois fatores")) {
+      if (event.data.includes("Autenticação de dois fatores detectada. Insira o código enviado ao seu celular.")) {
         setWaitingForTwoFactor(true);
       }
     };
