@@ -53,7 +53,7 @@ export default function Home() {
         setLoading(false);
       }
 
-      if (event.data.includes("Autenticação de dois fatores detectada. Insira o código enviado ao seu celular.")) {
+      if (event.data.includes("Digite o código de dois fatores")) {
         setWaitingForTwoFactor(true);
       }
     };
@@ -63,6 +63,7 @@ export default function Home() {
     if (wsRef.current && waitingForTwoFactor) {
       wsRef.current.send(JSON.stringify({ twoFactorCode }));
       setWaitingForTwoFactor(false);
+      setLoading(false);
     }
   };
 
