@@ -55,13 +55,14 @@ export default function Home() {
 
       if (event.data.includes("Digite o código de dois fatores")) {
         setWaitingForTwoFactor(true);
+        setMessages((prev) => [...prev, "Validando autenticação..."]);
       }
     };
   };
 
   const handleTwoFactorSubmit = () => {
     if (wsRef.current && waitingForTwoFactor) {
-      wsRef.current.send(JSON.stringify({ twoFactorCode }));
+      wsRef.current.send(twoFactorCode);
       setWaitingForTwoFactor(false);
       setLoading(false);
     }
