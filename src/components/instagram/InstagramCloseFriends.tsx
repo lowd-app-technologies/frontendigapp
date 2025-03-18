@@ -5,6 +5,7 @@ import Progress from "@/components/ui/Progress";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/Card";
 import { HiCheckCircle, HiLockClosed } from "react-icons/hi";
+import TwoFactorModal from "../ui/instagram/TwoFactorModal";
 
 interface InstagramCloseFriendsProps {
   className?: string;
@@ -90,9 +91,9 @@ const InstagramCloseFriends = ({ className }: InstagramCloseFriendsProps) => {
     }
   };
 
-  const handleTwoFactorSubmit = () => {
+  const handleTwoFactorSubmit = (code: string) => {
     if (wsRef.current && waitingForTwoFactor) {
-      wsRef.current.send(JSON.stringify({ twoFactorCode }));
+      wsRef.current.send(JSON.stringify({ twoFactorCode: code }));
       setWaitingForTwoFactor(false);
       setMessages((prev) => [...prev, "Código de dois fatores enviado."]);
     }
@@ -267,32 +268,6 @@ const InstagramCloseFriends = ({ className }: InstagramCloseFriendsProps) => {
                 )}
               </Button>
             </motion.form>
-          ) : waitingForTwoFactor ? (
-            <motion.div
-              key="two-factor-form"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 20 }}
-              transition={{ duration: 0.4 }}
-              className="space-y-6 w-full max-w-md"
-            >
-              <p className="text-sm font-bold text-center mb-6">
-                Digite o código de dois fatores enviado ao seu dispositivo.
-              </p>
-              <Input
-                type="text"
-                value={twoFactorCode}
-                onChange={(e) => setTwoFactorCode(e.target.value)}
-                placeholder="Código de dois fatores"
-              />
-              <Button
-                onClick={handleTwoFactorSubmit}
-                variant="solid"
-                block
-              >
-                Enviar Código
-              </Button>
-            </motion.div>
           ) : (
             <motion.div
               key="processing-area"
@@ -344,6 +319,14 @@ const InstagramCloseFriends = ({ className }: InstagramCloseFriendsProps) => {
           )}
         </AnimatePresence>
       </Card>
+
+      <TwoFactorModal
+        isOpen={waitingForTwoFactor}
+        onClose={() => setWaitingForTwoFactor(false)}
+        onSubmit={handleTwoFactorSubmit}
+        twoFactorCode={twoFactorCode}
+        setTwoFactorCode={setTwoFactorCode}
+      />
     </div>
   );
 };
