@@ -34,7 +34,7 @@ export default function Home() {
     setShowForm(false);
     setCurrentMessageIndex(0);
 
-    const ws = new WebSocket("ws://127.0.0.1:8000/ws");
+    const ws = new WebSocket("wss://pythonfastapi-production-437e.up.railway.app/ws");
     wsRef.current = ws;
 
     ws.onopen = () => {
@@ -70,7 +70,7 @@ export default function Home() {
 
   const handleStopService = async () => {
     try {
-      const response = await fetch("http://127.0.0.1:8000/stop", { method: "POST" });
+      const response = await fetch("https://pythonfastapi-production-437e.up.railway.app/stop", { method: "POST" });
 
       if (response.ok) {
         if (wsRef.current) {
