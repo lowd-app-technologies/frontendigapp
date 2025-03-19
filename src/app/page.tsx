@@ -63,6 +63,7 @@ export default function Home() {
   const handleTwoFactorSubmit = () => {
     if (wsRef.current && waitingForTwoFactor) {
       wsRef.current.send(JSON.stringify({twoFactorCode}));
+      console.log("Enviando código de dois fatores:", twoFactorCode);
       setWaitingForTwoFactor(false);
       setLoading(false);
     }
